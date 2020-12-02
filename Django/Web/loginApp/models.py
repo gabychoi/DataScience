@@ -13,3 +13,20 @@ class Signup(models.Model):
 
     class Meta:
         db_table = 'user_db'
+
+
+class Photo(models.Model):
+    author     = models.TextField(max_length=50)
+    comment    = models.TextField(blank=True)
+    image      = models.ImageField(blank= True)
+    created    = models.DateTimeField(auto_now_add=True)
+    updated    = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "comment : " + self.comment
+
+    class Meta:
+        db_table = 'photo_db'
+        ordering = ['-created']
+
+
