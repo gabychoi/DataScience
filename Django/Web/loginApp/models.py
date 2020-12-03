@@ -16,6 +16,7 @@ class Signup(models.Model):
 
 
 class Photo(models.Model):
+    post_num   = models.AutoField(unique=True, primary_key=True)
     author     = models.TextField(max_length=50)
     comment    = models.TextField(blank=True)
     image      = models.ImageField(blank= True)
