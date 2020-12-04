@@ -163,8 +163,9 @@
                   </div><!-- end post state form -->
 
 
-                  {% if post_lists %}
+
                   <!--   posts -->
+                  {% if post_lists %}
                   {% for post_list in post_lists %}
 
                   <div class="box box-widget">
@@ -183,36 +184,32 @@
                       <button type="button" class="btn btn-default btn-xs"><i class="fa fa-thumbs-o-up"></i> Like</button>
                       <span class="pull-right text-muted">127 likes - 3 comments</span>
                     </div>
-                    <div class="box-footer box-comments" style="display: block;">
-                      <div class="box-comment">
-                        <img class="img-circle img-sm" src="img/Friends/guy-2.jpg" alt="User Image">
-                        <div class="comment-text">
-                          <span class="username">
-                          Maria Gonzales
-                          <span class="text-muted pull-right">8:03 PM Today</span>
-                          </span>
-                          It is a long established fact that a reader will be distracted
-                          by the readable content of a page when looking at its layout.
-                        </div>
-                      </div>
 
+                    {% for comment in comment_list %}
+                    {% if post_list.pk_num == comment.post %}
+                    <div class="box-footer box-comments" style="display: block;">
                       <div class="box-comment">
                         <img class="img-circle img-sm" src="img/Friends/guy-3.jpg" alt="User Image">
                         <div class="comment-text">
                           <span class="username">
-                          Luna Stark
-                          <span class="text-muted pull-right">8:03 PM Today</span>
+                          {{comment.comment_id}}
+                          <span class="text-muted pull-right">{{comment.created}}</span>
                           </span>
-                          It is a long established fact that a reader will be distracted
-                          by the readable content of a page when looking at its layout.
+                          {{comment.comment}}
                         </div>
                       </div>
                     </div>
+                    {% endif %}
+                    {% endfor %}
+
                     <div class="box-footer" style="display: block;">
-                      <form action="#" method="post">
+                      <form action="{% url 'comment_posting' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="pk_num" value="{{post_list.pk_num}}" />
                         <img class="img-responsive img-circle img-sm" src="img/Friends/guy-3.jpg" alt="Alt Text">
                         <div class="img-push">
-                          <input type="text" class="form-control input-sm" placeholder="Press enter to post comment">
+                          <input type="text" class="form-control input-sm" placeholder="Press enter to post comment", name="comment">
+                          <button type="submit" class="btn btn-default btn-xs">reply</button>
                         </div>
                       </form>
                     </div>

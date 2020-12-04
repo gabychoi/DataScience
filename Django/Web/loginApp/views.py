@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect, HttpResponseRedirect, reverse
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.files.storage import FileSystemStorage
-from .models import Signup, Photo
+from .models import Signup, Photo, Comment_posting
 from .forms import PhotoForm
 
 # Create your views here.
@@ -64,10 +64,16 @@ def posting(request):
         name = fs.save(uploaded_image.name, uploaded_image)
         image_url = fs.url(name)
 
-        DB = Photo(author  = author,
-                   comment = comment,
-                   image   = image_url)
-        DB.save()
+        Photo.objects.create(
+            author=author,
+            comment=comment,
+            image=image_url
+        )
+
+        # DB = Photo(author  = author,
+        #            comment = comment,
+        #            image   = image_url)
+        # DB.save()
 
         context['image_url'] = image_url
         context['user_name'] = author
@@ -77,14 +83,47 @@ def posting(request):
 
 
 def photo_list(request):
-    photo_list = Photo.objects.all()[0:5]
+    photo_lists = Photo.objects.all()[0:5]
+    pk_num_list = [post.pk_num for post in photo_lists]
+
+    for a in photo_lists:
+        print(type(a))
+        print(a)
+
+    comment_list = Comment_posting.objects.all()
+    user_name = request.session['user_name']
+
+
+    for a in comment_list:
+        print(a.post)
 
     context = {
-        'post_lists' : photo_list
+        'user_name'    : user_name,
+        'post_lists'   : photo_lists,
+        'comment_list' : comment_list,
+        'pk_num_list'  : pk_num_list
     }
     return render(request, 'loginApp/home.html', context)
 
 
-def upload_photo(request):
-    form = PhotoForm()
-    return render(request, 'loginApp/home.html', {'form' : form})
+
+def comment_posting(request):
+    if request.method == 'POST':
+        pk_num = request.POST['pk_num']
+        current_id = request.session['user_name']
+        comment_content = request.POST['comment']
+
+    DB = Comment_posting(post       = pk_num,
+                         comment_id = current_id,
+                         comment    = comment_content)
+
+    DB.save()
+    return redirect('photo_list')
+
+
+
+
+
+def comment_list(request):
+    pass
+
