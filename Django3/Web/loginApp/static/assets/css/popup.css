@@ -1,0 +1,87 @@
+.col {
+    position : relative;
+    width : 400px;
+    height : 500px;
+    background : #ddd;
+}
+
+
+.main {
+    position : absolute;
+    width : 350px;
+    height : 450px;
+    background : #777;
+    color : #fff;
+    margin : 25px; 0; 0; 25px;
+}
+
+.col .main h2 {
+    margin-left : 100px;
+}
+
+.col .main img{
+    margin-left : 25%;
+}
+
+.profiles .fa-ul li {
+    margin-left : 25%;
+}
+
+
+.fa-ul li div {
+    font-weight : 900;
+    font-size : 15px;
+}
+
+
+.fa-ul div span span{
+    margin-left : 50%
+    font-weight : 500
+}
+
+
+.main .human-status {
+    margin-bottom : 10px;
+}
+
+.human-status .comment-level{
+    margin-left : 30%
+}
+
+
+.dog{
+    margin-left : 45%;
+}
+.murder{
+    margin-left : 30%;
+}
+.criminal{
+    margin-left : 30%;
+}
+.human{
+    margin-left : 45%;
+}
+
+.human-status .dog p {
+    color : #ff0000;
+    font-size : 30px;
+    font-weight : 900
+}
+
+.human-status .murder p {
+    color : #ff3300;
+    font-size : 30px;
+    font-weight : 900
+}
+
+.human-status .criminal p {
+    color : #ffcc33;
+    font-size : 30px;
+    font-weight : 900
+}
+
+.human-status .human p {
+    color : #0000ff;
+    font-size : 30px;
+    font-weight : 900
+}
