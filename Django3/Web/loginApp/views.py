@@ -28,13 +28,12 @@ def mish(x):
 
 def bad_comment_detector(comment):
     # 단어사전 불러오기
-    now_dir = os.getcwd()
-    word_index_json = open(now_dir + '/Django3/Web/loginApp/model/word_index_vocab.json', 'r', encoding='UTF-8-SIG').read()
+    word_index_json = open('/home/commentFilter/commentFilter/Django3/Web/loginApp/model/word_index_vocab.jason', 'r', encoding='UTF-8-SIG').read()
     word_index_vocab = json.loads(word_index_json)
     tokenizer = Tokenizer()
     tokenizer.word_index = word_index_vocab
     get_custom_objects().update({'mish': mish})
-    loaded_model = load_model(now_dir + '/Django3/Web/loginApp/model/1D_CNN_best.h5')
+    loaded_model = load_model('/home/commentFilter/commentFilter/Django3/Web/loginApp/model/1D_CNN_best.h5')
     comment_list = [list(comment)]
     comment_label = tokenizer.texts_to_sequences(comment_list)
     comment_pad = pad_sequences(comment_label, padding='post', maxlen=400)
