@@ -28,7 +28,7 @@ def mish(x):
 
 def bad_comment_detector(comment):
     # 단어사전 불러오기
-    word_index_json = open('/home/commentFilter/commentFilter/Django3/Web/loginApp/model/word_index_vocab.jason', 'r', encoding='UTF-8-SIG').read()
+    word_index_json = open('/home/commentFilter/commentFilter/Django3/Web/loginApp/model/word_index_vocab.json', 'r', encoding='UTF-8-SIG').read()
     word_index_vocab = json.loads(word_index_json)
     tokenizer = Tokenizer()
     tokenizer.word_index = word_index_vocab
