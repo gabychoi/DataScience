@@ -10,12 +10,12 @@ import re
 import os
 
 # tensorflow
-from tensorflow.keras.models import load_model
-from tensorflow.keras.utils import get_custom_objects
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-import tensorflow.keras.backend as K
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.optimizers import Adam
+from keras.models import load_model
+from keras.utils import get_custom_objects
+from keras.preprocessing.sequence import pad_sequences
+import keras.backend as K
+from keras.preprocessing.text import Tokenizer
+from keras.optimizers import Adam
 # Create your views here.
 
 ######################################################################
