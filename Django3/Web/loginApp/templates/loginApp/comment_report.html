@@ -9,8 +9,7 @@
     <title>댓글 신고/이의제기</title>
 
     <!-- Bootstrap -->
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/custom2.css" rel="stylesheet">
+    <link href='{% static "assets/css/custom2.css" %}' rel="stylesheet">
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -25,12 +24,15 @@
 
     <h4 class="text-primary"> 댓글 신고 / 이의제기</h4>
 
-    <div class="box">
-     <h5> 해당 댓글을 어떻게 하시겠습니까?</h5>
 
-            <form action="" method="post" id="send_post_key">
+     <div class="box">
+        <div class="box2">
+            <h5> 해당 댓글을 어떻게 하시겠습니까?</h5>
+            <h6><font>{{report_comment}}</font></h6>
+        </div>
+            <form action="{% url 'comment_report_save' %}" method="post" id="send_post_key">
               {% csrf_token %}
-              <input type="hidden" name="comment_key" value="{{comment_key}}">
+              <input type="hidden" name="comment_pk_num" value="{{comment_pk_num}}">
                 <div class="radio">
                   <label>
                     <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>

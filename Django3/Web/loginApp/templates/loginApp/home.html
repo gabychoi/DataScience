@@ -23,6 +23,7 @@
     <link href='{% static "assets/css/file_upload.css" %}' rel="stylesheet">
     <link href='{% static "assets/css/style.css" %}' rel="stylesheet">
     <link href='{% static "assets/css/popup.css" %}' rel="stylesheet">
+    <link href='{% static "assets/css/toggle2.css" %}' rel="stylesheet">
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
     <script src='{% static "bootstrap.3.3.6/js/bootstrap.min.js" %}'></script>
     <script src='{% static "assets/js/custom.js" %}'></script>
@@ -54,11 +55,8 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li class="actives"><a href="{% url 'convert' %}">악!플원정대 끄기</a></li>
-            <li class="actives"><a href="profile.html">Profile</a></li>
-            <li><a href="home.html">Home</a></li>
+            <li><a href="{% url 'introduce'%}">프로젝트 소개</a></li>
             <li><a href="{% url 'logout' %}">로그아웃</a></li>
-            <li><a href="{% url 'introduce'%}">팀원소개</a></li>
           </ul>
         </div>
       </div>
@@ -82,40 +80,34 @@
                   <form action="{% url 'profile_img' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="filebox">
-                      <label for="input-profile"><i class="fa fa-cog"></i> Add</label>
+                      <label for="input-profile"><i class="fa fa-upload"></i> 사진 선택</label>
                       <input type="file" id="input-profile" name="profile_image" style="display:none"/>
-                      <button type="submit" class="btn filebox">Upload</button>
+                      <button type="submit" class="btn filebox">사진 올리기</button>
                     </div>
 
                   </form>
                 </div>
-
-
-                <ul class="nav nav-pills nav-stacked">
-                  <li class="active"><a href="home.html"> <i class="fa fa-user"></i> News feed</a></li>
-                  <li>
-                    <a href="#"> 
-                      <i class="fa fa-envelope"></i> Messages 
-                      <span class="label label-info pull-right r-activity">9</span>
-                    </a>
-                  </li>
-                  <li><a href="#"> <i class="fa fa-calendar"></i> Events</a></li>
-                  <li><a href="#"> <i class="fa fa-image"></i> Photos</a></li>
-                  <li><a href="#"> <i class="fa fa-share"></i> Browse</a></li>
-                  <li><a href="#"> <i class="fa fa-floppy-o"></i> Saved</a></li>
-                </ul>
+                <!-- 프로필 밑에 빈공간이허해보여 추가해주자 -->
+                <div class="toggleWrap2">
+                  <span>악성댓글 필터링 봇</span>
+                  <input type="checkbox" id="toggle-alarm2">
+                  <div>
+                    <label for="toggle-alarm2" onclick="javascript:model_off()">
+                      <span class="text"></span>
+                    </label>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="widget">
-              <div class="widget-body">
-                <ul class="nav nav-pills nav-stacked">
-                  <li><a href="#"> <i class="fa fa-globe"></i> Pages</a></li>
-                  <li><a href="#"> <i class="fa fa-gamepad"></i> Games</a></li>
-                  <li><a href="#"> <i class="fa fa-puzzle-piece"></i> Ads</a></li>
-                  <li><a href="#"> <i class="fa fa-home"></i> Markerplace</a></li>
-                  <li><a href="#"> <i class="fa fa-users"></i> Groups</a></li>
-                </ul>
+            <!-- 가은이 프로필 수정 -->
+           <div class="widget">
+              <div class="widget-header">
+                <h3 class="widget-caption"><i class="fa fa-user"></i> 프로필 소개</h3>
+              </div>
+              <div class="widget-body bordered-top bordered sky">
+                <p>{{user_db.about}}</p><br>
+                <button type="button" onclick="location.href={% url 'about' %}" class="btn filebox">수정</button>
               </div>
             </div>
           </div>
@@ -133,9 +125,9 @@
                   <div class="box profile-info n-border-top">
                     <form action="{% url 'posting' %}" method="POST" enctype="multipart/form-data">
                       {% csrf_token %}
-                      <textarea name="comment" class="form-control input-lg p-text-area" rows="2" placeholder="Whats in your mind today?"></textarea>
+                      <textarea name="comment" class="form-control input-lg p-text-area" rows="2" placeholder="당신의 일상을 공유하세요."></textarea>
                       <div class="box-footer box-form">
-                        <button type="submit" class="btn btn-azure pull-right">Post</button>
+                        <button type="submit" class="btn btn-azure pull-right">게시</button>
                         <ul class="nav nav-pills">
                             <li>
                               <input class="upload-name" value="파일선택" disabled="disabled">
@@ -154,21 +146,25 @@
                   {% if post_lists %}
                   {% for post_list in post_lists %}
 
-                  <div class="box box-widget">
+                  <div class="box box-widget" id="post{{post_list.pk_num}}">
                     <div class="box-header with-border">
                       <div class="user-block">
                         <img class="img-circle" src="{{post_list.post_user_image}}" alt="User Image">
                         <span class="username"><a href="#">{{post_list.author}}</a></span>
-                        <span class="description">{{post_list.created}}</span>
+                        <span class="description">
+                          {{post_list.created}}
+                        </span>
                       </div>
                     </div>
 
                     <div class="box-body" style="display: block;">
                       <img class="img-responsive show-in-modal" src="{{post_list.image}}" alt="Photo">
                       <p>{{post_list.comment}}</p>
-                      <button type="button" class="btn btn-default btn-xs"><i class="fa fa-share"></i> Share</button>
-                      <button type="button" class="btn btn-default btn-xs"><i class="fa fa-thumbs-o-up"></i> Like</button>
-                      <span class="pull-right text-muted">127 likes - 3 comments</span>
+                      <button type="button" class="btn btn-default btn-xs" onclick="javascript:like('{{post_list.pk_num}}')"><i class="fa fa-thumbs-o-up"></i>좋아요</button>
+                      {% if post_list.author == user_name%}
+                      <button type="button" class="btn btn-default btn-xs" onclick="javascript:post_erase('{{post_list.pk_num}}')"><i class="fa fa-trash"></i>삭제</button>
+                      {% endif %}
+                      <span class="pull-right text-muted">{{post_list.like}}likes</span>
                     </div>
 
 
@@ -181,7 +177,7 @@
                         <img class="img-circle img-sm" src="{{comment.comment_id_image}}" alt="User Image">
                         <div class="comment-text" id="commentBody_no_bad">
                           <span class="username">
-                            <a onclick="javascript:make_popup('{{comment.comment_pk_num}}')">
+                            <a onclick="javascript:make_popup('{{comment.comment_pk_num}}')" style="cursor:hand; cursor:pointer">
                               <font color="black">{{comment.comment_id}}</font>
                             </a>
                             {% for user_db in popup_db %}
@@ -196,22 +192,12 @@
                                     <ul class="fa-ul">
                                       <li><i class="fa-li fa fa-user"></i><div class="user-detail">아이디: <span>{{user_db.user_name}}</span> </div></li>
                                       <li><i class="fa-li fa fa-envelope"></i><div class="user-detail">이메일: <span>{{user_db.user_email}}</span> </div></li>
-                                      <li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플게시수: <span>{{user_db.penalty_count}}</span> </div></li>
+                                      <li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플게시수: <span style="color:red">{{user_db.penalty_count}}</span> </div></li>
                                       <li><i class="fa-li fa fa-comments"></i><div class="user-detail">댓글게시수: <span>{{user_db.comment_count}}</span> </div></li>
-                                      <li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플비율: <span>{{user_db.bad_comment_ratio}}</span> </div></li>
+                                      <li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플비율: <span style="color:red">{{user_db.bad_comment_ratio}}</span> </div></li>
+                                      <li><i class="fa-li fa fa-comments"></i><div class="user-detail">자기소개:</div></li>
+                                      <span>{{user_db.about}}</span>
                                     </ul>
-                                  </div>
-                                  <div class="human-status">
-                                    <div class="comment-level">악플등급</div>
-                                    {% if user_db.bad_comment_ratio > 0.9 %}
-                                    <div class="dog"><p>미친개</p></div>
-                                    {% elif user_db.bad_comment_ratio > 0.7 %}
-                                    <div class="murder"><p>언어 살인마</p> </div>
-                                    {% elif user_db.bad_comment_ratio > 0.5 %}
-                                    <div class="criminal"><p>언어 범죄자</p></div>
-                                    {% else %}
-                                    <div class="human"><p>일반인</p></div>
-                                    {% endif %}
                                   </div>
                                 </div>
                               </div>
@@ -219,16 +205,16 @@
                             {% endif %}
                             {% endfor %}
                           <span class="text-muted pull-right">{{comment.created}}</span>
-                          <a href="{% url 'comment_report' %}" data-value="{{comment.comment_pk_num}}">
-                            <font size="0.05" font-size="xx-small">신고/이의제기</font>
+                          <a href="{% url 'comment_report' id=comment.comment_pk_num %}">
+                            <font size="0.05" font-size="xx-small" style="cursor:hand; cursor:pointer">신고/이의제기</font>
                           </a>
                           {% if comment.comment_id == user_name %}
                           <a onclick="commentDelete('{{comment.comment_pk_num}}')">
-                            <font size="0.05" font-size="xx-small">삭제</font>
+                            <font size="0.05" font-size="xx-small" style="cursor:hand; cursor:pointer">삭제</font>
                           </a>
                           {% endif %}
                           </span>
-                          <font color="green" font-weight="900" font-family="돋움">["악!플원정대에 의해 가려진 게시물입니다.^^"]</font>
+                          <font color="#FF0000" font-weight="900" font-family="돋움">악!플원정대에 의해 가려진 게시물입니다.</font>
                         </div>
                       </div>
                       {% else %}
@@ -237,7 +223,7 @@
                         <img class="img-circle img-sm" src="{{comment.comment_id_image}}" alt="User Image">
                         <div class="comment-text" id="commentBody">
                           <span class="username">
-                            <a onclick="javascript:make_popup('{{comment.comment_pk_num}}')">
+                            <a href="javascript:make_popup('{{comment.comment_pk_num}}')" style="cursor:hand; cursor:pointer">
                               <font color="black">{{comment.comment_id}}</font>
                             </a>
                             {% for user_db in popup_db %}
@@ -252,22 +238,11 @@
                                     <ul class="fa-ul">
                                       <li><i class="fa-li fa fa-user"></i><div class="user-detail">아이디: <span>{{user_db.user_name}}</span> </div></li>
                                       <li><i class="fa-li fa fa-envelope"></i><div class="user-detail">이메일: <span>{{user_db.user_email}}</span> </div></li>
-                                      <li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플게시수: <span>{{user_db.penalty_count}}</span> </div></li>
+                                      <li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플게시수: <span style="color:red">{{user_db.penalty_count}}</span> </div></li>
                                       <li><i class="fa-li fa fa-comments"></i><div class="user-detail">댓글게시수: <span>{{user_db.comment_count}}</span> </div></li>
-                                      <li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플비율: <span>{{user_db.bad_comment_ratio}}</span> </div></li>
+                                      <li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플비율: <span style="color:red">{{user_db.bad_comment_ratio}}</span> </div></li>
+                                      <li><i class="fa-li fa fa-comments"></i><div class="user-detail">자기소개: <span>{{user_db.about}}</span></div></li>
                                     </ul>
-                                  </div>
-                                  <div class="human-status">
-                                    <div class="comment-level">악플등급</div>
-                                    {% if user_db.bad_comment_ratio > 0.9 %}
-                                    <div class="dog"><p>미친개</p></div>
-                                    {% elif user_db.bad_comment_ratio > 0.7 %}
-                                    <div class="murder"><p>언어 살인마</p> </div>
-                                    {% elif user_db.bad_comment_ratio > 0.5 %}
-                                    <div class="criminal"><p>언어 범죄자</p></div>
-                                    {% else %}
-                                    <div class="human"><p>일반인</p></div>
-                                    {% endif %}
                                   </div>
                                 </div>
                               </div>
@@ -275,11 +250,11 @@
                             {% endif %}
                             {% endfor %}
                           <span class="text-muted pull-right">{{comment.created}}</span>
-                          <a href="{% url 'comment_report' %}" data-value="{{comment.comment_pk_num}}">
+                          <a href="{% url 'comment_report' id=comment.comment_pk_num %}" style="cursor:hand; cursor:pointer">
                             <font size="0.05" font-size="xx-small">신고/이의제기</font>
                           </a>
                           {% if comment.comment_id == user_name %}
-                          <a onclick="commentDelete('{{comment.comment_pk_num}}')">
+                          <a onclick="commentDelete('{{comment.comment_pk_num}}')" style="cursor:hand; cursor:pointer">
                             <font size="0.05" font-size="xx-small">삭제</font>
                           </a>
                           {% endif %}
@@ -298,7 +273,7 @@
                       <input type="hidden" id="pk_num" value="{{post_list.pk_num}}" />
                       <img class="img-responsive img-circle img-sm" src="{{user_image}}" alt="Alt Text">
                       <div class="img-push">
-                        <input type="text" class="form-control input-sm" placeholder="Press enter to post comment" name="comment" id="commentContent{{post_list.pk_num}}" maxlength="400" onkeypress="if(event.keyCode==13){pressEnter('{{post_list.pk_num}}')}">
+                        <input type="text" class="form-control input-sm" placeholder="댓글입력" name="comment" id="commentContent{{post_list.pk_num}}" maxlength="400" onkeypress="if(event.keyCode==13){pressEnter('{{post_list.pk_num}}')}" style="width=200px">
                         <button type="submit" class="btn btn-azure pull-right" id="commentBtn{{post_list.pk_num}}">댓글달기</button>
                       </div>
                     </div>
@@ -319,7 +294,7 @@
           <!-- Friends activity -->
           <div class="widget">
             <div class="widget-header">
-              <h3 class="widget-caption">Friends activity <i class="fa fa-user"></i></h3>
+              <h3 class="widget-caption">악!플원정대 팀원 <i class="fa fa-user"></i></h3>
 
 
             </div>
@@ -365,7 +340,7 @@
                         <div class="col-xs-9">
                           <b><a href="#">CMO</a></b> SunLim Kim
                           <br><b><a href="#">Team member</a></b>:
-                          <span class="timeago" >Alice</span>
+                          <span class="timeago" >Kristen</span>
                         </div>
                       </div>
                     </li>
@@ -432,7 +407,6 @@
     </footer>
 
 
-  { % block extra_script % }
   <script>
     $(document).ready(function(){
       var post_num_list  = {{ pk_num_list | safe }};
@@ -467,21 +441,44 @@
             'writer'              : writer,
             'comment'             : comment
           },
-
             success : function(response){
               if(response.bad_comment_bool==0){
                 var txt = "";
+                var temp_var = "'comment_report'"
                 txt += '<div class="box-comment" id="comment' + response.last_comment_pk_num + '">';
                 txt += '<img class="img-circle img-sm" src="' + response.current_id_image + '" alt="User Image">';
                 txt += '<div class="comment-text" id="commentBody">';
+
+
                 txt += '<span class="username">';
-                txt += response.current_id;
+                txt += '<a onclick="javascript:make_popup(' + response.last_comment_pk_num + ')" style="cursor:hand; cursor:pointer;">'
+                txt += '<font color="black">' + response.current_id + '</font>';
+                txt += '</a>'
+                txt += '<div id="bpopup' + response.last_comment_pk_num + '" style="display:none; background-color:white; width:350px; height:500px;">'
+                txt += '<div class="col">';
+                txt += '<div class="main">';
+                txt += '<h2>' + response.current_id + '</h2>';
+                txt += '<img src="' + response.current_id_image + '" width="150" height="150">'
+                txt += '<div class="profiles">';
+                txt += '<ul class="fa-ul">';
+                txt += '<li><i class="fa-li fa fa-user"></i><div class="user-detail">아이디: <span>' + response.user_name + '</span> </div></li>'
+                txt += '<li><i class="fa-li fa fa-envelope"></i><div class="user-detail">이메일: <span>' + response.user_email + '</span> </div></li>'
+                txt += '<li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플게시수: <span style="color:red">' + response.penalty_count + '</span> </div></li>'
+                txt += '<li><i class="fa-li fa fa-comments"></i><div class="user-detail">댓글게시수: <span>' + response.comment_count + '</span> </div></li>'
+                txt += '<li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플비율: <span style="color:red">' + response.bad_comment_ratio + '</span> </div></li>'
+                txt += '<li><i class="fa-li fa fa-comments"></i><div class="user-detail">자기소개: <span>' + response.about + '</span> </div></li>'
+                txt += '</ul>';
+                txt += '</div>';
+                txt += '</div>';
+                txt += '</div>';
+                txt += '</div>';
+
                 txt += '<span class="text-muted pull-right">' + response.created +'</span>';
-                txt += '<a onclick="">';
-                txt += '<font size="0.05" font-size="xx-small">신고/이의제기 </font>';
+                txt += '<a href="javascript:report_url('+ response.last_comment_pk_num +')">';
+                txt += '<font size="0.05" font-size="xx-small" style="cursor:hand;cursor:pointer;">신고/이의제기</font>';
                 txt += '</a>';
-                txt += '<a onclick="commentDelete('+ response.last_comment_pk_num +')">';
-                txt += '<font size="0.05" font-size="xx-small">삭제</font>';
+                txt += '<a href="commentDelete('+ response.last_comment_pk_num +')">';
+                txt += '<font size="0.05" font-size="xx-small" style="cursor:hand;cursor:pointer;"> 삭제</font>';
                 txt += '</a>';
                 txt += '</span>';
                 txt += response.comment_content;
@@ -494,17 +491,39 @@
                 txt += '<div class="box-comment" id="comment' + response.last_comment_pk_num + '">';
                 txt += '<img class="img-circle img-sm" src="' + response.current_id_image + '" alt="User Image">';
                 txt += '<div class="comment-text" id="commentBody">';
+
                 txt += '<span class="username">';
-                txt += response.current_id;
-                txt += '<span class="text-muted pull-right">' + response.created +'</span>';
-                txt += '<a onclick="">'
-                txt += '<font size="0.05" font-size="xx-small">신고/이의제기  </font>';
+                txt += '<a onclick="javascript:make_popup(' + response.last_comment_pk_num + ')" style="cursor:hand; cursor:pointer;">'
+                txt += '<font color="black">' + response.current_id + '</font>';
                 txt += '</a>'
-                txt += '<a onclick="commentDelete('+ response.last_comment_pk_num +')">'
-                txt += '<font size="0.05" font-size="xx-small">삭제</font>';
+                txt += '<div id="bpopup' + response.last_comment_pk_num + '" style="display:none; background-color:white; width:350px; height:500px;">'
+                txt += '<div class="col">';
+                txt += '<div class="main">';
+                txt += '<h2>' + response.current_id + '</h2>';
+                txt += '<img src="' + response.current_id_image + '" width="150" height="150">'
+                txt += '<div class="profiles">';
+                txt += '<ul class="fa-ul">';
+                txt += '<li><i class="fa-li fa fa-user"></i><div class="user-detail">아이디: <span>' + response.user_name + '</span> </div></li>'
+                txt += '<li><i class="fa-li fa fa-envelope"></i><div class="user-detail">이메일: <span>' + response.user_email + '</span> </div></li>'
+                txt += '<li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플게시수: <span style="color:red">' + response.penalty_count + '</span> </div></li>'
+                txt += '<li><i class="fa-li fa fa-comments"></i><div class="user-detail">댓글게시수: <span>' + response.comment_count + '</span> </div></li>'
+                txt += '<li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플비율: <span style="color:red">' + response.bad_comment_ratio + '</span> </div></li>'
+                txt += '<li><i class="fa-li fa fa-comments"></i><div class="user-detail">자기소개: <span>' + response.about + '</span> </div></li>'
+                txt += '</ul>';
+                txt += '</div>';
+                txt += '</div>';
+                txt += '</div>';
+                txt += '</div>';
+
+                txt += '<span class="text-muted pull-right">' + response.created +'</span>';
+                txt += '<a href="javascript:report_url('+ response.last_comment_pk_num +')">';
+                txt += '<font size="0.05" font-size="xx-small" style="cursor:hand;cursor:pointer">신고/이의제기</font>';
+                txt += '</a>'
+                txt += '<a href="commentDelete('+ response.last_comment_pk_num +')">'
+                txt += '<font size="0.05" font-size="xx-small" style="cursor:hand; cursor:pointer;"> 삭제</font>';
                 txt += '</a>';
                 txt += '</span>';
-                txt += '<font color="green" font-weight="900">["악!플원정대에 의해 가려진 게시물입니다.^^"]</font>';
+                txt += '<font color="#FF0000" font-weight="900">악!플원정대에 의해 가려진 게시물입니다.</font>';
                 txt += '</div>';
                 txt += '</div>';
                 $(post_id).append(txt);
@@ -559,6 +578,59 @@
         modalClose : true
       })
     }
+
+    function report_url(comment_pk){
+      var url = 'http://localhost:8000/comment_report/' + comment_pk + '/'
+      location.href = url
+    }
+
+    function model_off(){
+      var url = 'http://localhost:8000/convert/'
+      location.href = url
+    }
+
+    function post_erase(post_pk_num){
+      var post_pk_num = post_pk_num
+      var id = '#post' + post_pk_num
+      var delete_warning = confirm('게시물을 삭제하시겠습니까?')
+      if(delete_warning == true){
+        $.ajax({
+          type      : "POST",
+          url       : "{% url 'post_erase' %}",
+          dataType  : "json",
+          data      : {
+            'csrfmiddlewaretoken'   : '{{csrf_token}}',
+            'post_pk_num'           : post_pk_num,
+          },
+          success : function(response){
+            $(id).remove();
+          }
+        })
+      }
+      else{
+        console.log('삭제안해!');
+      }
+    }
+
+    function like(post_pk_num){
+      var post_pk_num = post_pk_num;
+      var current_user_name = '{{user_name}}'
+
+      $.ajax({
+        type     : "POST",
+        url      : '{% url 'like' %}',
+        dataType : "json",
+        data     : {
+          'csrfmiddlewaretoken' : '{{csrf_token}}',
+          'post_pk_num'         : post_pk_num,
+          'current_user_name'   : current_user_name,
+        },
+        success : function(response){
+          console.log(response.post_like_count);
+        }
+      })
+    }
+
   </script>
 
 

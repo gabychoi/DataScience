@@ -10,21 +10,21 @@
     position : absolute;
     width : 350px;
     height : 450px;
-    background : #777;
+    background : #2DC3E8;
     color : #fff;
     margin : 25px; 0; 0; 25px;
 }
 
 .col .main h2 {
-    margin-left : 100px;
+    text-align : center;
 }
 
 .col .main img{
-    margin-left : 25%;
+    margin-left  :  28%;
 }
 
-.profiles .fa-ul li {
-    margin-left : 25%;
+.profiles .fa-ul li div {
+    margin-left : 22%
 }
 
 
@@ -33,55 +33,13 @@
     font-size : 15px;
 }
 
+.fa-ul li i {
+    margin-left : 22%;
+}
+
 
 .fa-ul div span span{
-    margin-left : 50%
+    text-align : center;
     font-weight : 500
 }
 
-
-.main .human-status {
-    margin-bottom : 10px;
-}
-
-.human-status .comment-level{
-    margin-left : 30%
-}
-
-
-.dog{
-    margin-left : 45%;
-}
-.murder{
-    margin-left : 30%;
-}
-.criminal{
-    margin-left : 30%;
-}
-.human{
-    margin-left : 45%;
-}
-
-.human-status .dog p {
-    color : #ff0000;
-    font-size : 30px;
-    font-weight : 900
-}
-
-.human-status .murder p {
-    color : #ff3300;
-    font-size : 30px;
-    font-weight : 900
-}
-
-.human-status .criminal p {
-    color : #ffcc33;
-    font-size : 30px;
-    font-weight : 900
-}
-
-.human-status .human p {
-    color : #0000ff;
-    font-size : 30px;
-    font-weight : 900
-}

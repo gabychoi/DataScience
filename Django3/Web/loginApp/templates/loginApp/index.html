@@ -44,7 +44,7 @@
             <span class="icon-bar bar2"></span>
             <span class="icon-bar bar3"></span>
           </button>
-          <a class="navbar-brand" href="profile.html">Day-Day</a>
+          <a class="navbar-brand" href="profile.html">악!플원정대</a>
         </div>
       </div>
     </nav>
@@ -57,23 +57,20 @@
                 <div class="card">
                   <div class="card-block">
                     <div class="center">
-                      <h4 class="m-b-0"><span class="icon-text">Login</span></h4>
+                      <h4 class="m-b-0"><span class="icon-text">로그인</span></h4>
                       <p class="text-muted">{{error}}</p>
                     </div>
                     <form action="{% url 'login' %}" method="POST">
                       {% csrf_token %}
                       <div class="form-group">
-                        <input type="email" class="form-control" placeholder="Email Address", name="email">
+                        <input type="email" class="form-control" placeholder="이메일@주소", name="email">
                       </div>
                       <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Password", name="pwd">
-                        <a href="#" class="pull-xs-right">
-                          <small>Forgot?</small>
-                        </a>
+                        <input type="password" class="form-control" placeholder="비밀번호", name="pwd">
                         <div class="clearfix"></div>
                       </div>
                       <div class="center">
-                        <button type="submit" class="btn btn-azure">Login</button>
+                        <button type="submit" class="btn btn-azure">로그인</button>
                       </div>
                     </form>
                   </div>
@@ -81,25 +78,25 @@
                 <div class="card">
                   <div class="card-block center">
                     <h4 class="m-b-0">
-                      <span class="icon-text">Sign Up</span>
+                      <span class="icon-text">회원가입</span>
                     </h4>
                     <p class="text-muted">
                     </p>
                     <form action="{% url 'signup' %}" method="POST">
                       {% csrf_token %}
                       <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Full Name", name="fullname">
+                        <input type="text" class="form-control" placeholder="닉네임", name="fullname">
                       </div>
                       <div class="form-group">
-                        <input type="email" class="form-control" placeholder="Email", name="email">
+                        <input type="email" class="form-control" placeholder="이메일@주소", name="email">
                       </div>
                       <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Password", name="passsword">
+                        <input type="password" class="form-control" placeholder="비밀번호", name="passsword">
                       </div>
                       <div class="form-group">
-                        <input type="password" class="form-control" placeholder="Confirm Password", name="re_passsword">
+                        <input type="password" class="form-control" placeholder="비밀번호 확인", name="re_passsword">
                       </div>
-                      <button type="submit" class="btn btn-azure">Register</button>
+                      <button type="submit" class="btn btn-azure">회원가입</button>
                     </form>
                   </div>
                 </div>
@@ -113,16 +110,6 @@
         </div>
       </footer>
     </div>
-
-    {% if messages %}
-    <div class="row" style="margin:20px auto;">
-    <div class="col-sm-12">
-        <div class="alert alert-danger">
-          {{ messages.error }}
-        </div>
-    </div>
-    </div>
-    {% endif %}
 
 
     <script>
