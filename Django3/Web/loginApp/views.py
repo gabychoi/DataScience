@@ -1,21 +1,20 @@
-from django.shortcuts import render, redirect, HttpResponseRedirect, reverse
-from django.http import HttpResponse
+import datetime
+import json
+
+import keras.backend as K
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.files.storage import FileSystemStorage
-from .models import Signup, Photo, Comment_posting, Comment_report, Like
-
-import json
-import datetime
-import re
-import os
-
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, HttpResponseRedirect, reverse
 # tensorflow
 from keras.models import load_model
-from keras.utils import get_custom_objects
 from keras.preprocessing.sequence import pad_sequences
-import keras.backend as K
 from keras.preprocessing.text import Tokenizer
-from keras.optimizers import Adam
+from keras.utils import get_custom_objects
+
+from .models import Signup, Photo, Comment_posting, Comment_report, Like
+
+
 # Create your views here.
 
 ######################################################################
@@ -28,12 +27,12 @@ def mish(x):
 
 def bad_comment_detector(comment):
     # 단어사전 불러오기
-    word_index_json = open('/home/commentFilter/commentFilter/Django3/Web/loginApp/model/word_index_vocab.json', 'r', encoding='UTF-8-SIG').read()
+    word_index_json = open('/Users/HojinChoi/Desktop/github/commentFilter/Django3/Web/loginApp/model/word_index_vocab.json', 'r', encoding='UTF-8-SIG').read()
     word_index_vocab = json.loads(word_index_json)
     tokenizer = Tokenizer()
     tokenizer.word_index = word_index_vocab
     get_custom_objects().update({'mish': mish})
-    loaded_model = load_model('/home/commentFilter/commentFilter/Django3/Web/loginApp/model/1D_CNN_best.h5')
+    loaded_model = load_model('/Users/HojinChoi/Desktop/github/commentFilter/Django3/Web/loginApp/model/1D_CNN_best.h5')
     comment_list = [list(comment)]
     comment_label = tokenizer.texts_to_sequences(comment_list)
     comment_pad = pad_sequences(comment_label, padding='post', maxlen=400)
