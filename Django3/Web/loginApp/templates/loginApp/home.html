@@ -504,7 +504,7 @@
                 txt += '<a href="javascript:report_url('+ response.last_comment_pk_num +')">';
                 txt += '<font size="0.05" font-size="xx-small" style="cursor:hand;cursor:pointer">신고/이의제기</font>';
                 txt += '</a>'
-                txt += '<a href="commentDelete('+ response.last_comment_pk_num +')">'
+                txt += '<a onclick="commentDelete('+ response.last_comment_pk_num +')">'
                 txt += '<font size="0.05" font-size="xx-small" style="cursor:hand; cursor:pointer;"> 삭제</font>';
                 txt += '</a>';
                 txt += '</span>';
