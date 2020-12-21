@@ -85,7 +85,7 @@ def signup(request):
                                   penalty_count     = 0,
                                   comment_count     = 0,
                                   bad_comment_ratio = 0,
-                                  about             = '소개를 입력하세요',)
+                                  about             = '소개를 입력하세요.',)
                 database.save()
                 flag = 1
                 return render(request, "loginApp/index.html", {'flag': flag})
@@ -188,7 +188,7 @@ def photo_list(request):
 
 def comment_create(request):
     if request.method == 'POST':
-        pk_num = request.POST['pk_num']
+        post_pk_num = request.POST['post_pk_num']
         current_id = request.POST['writer']
         comment_content = request.POST['comment']
         created = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -200,7 +200,7 @@ def comment_create(request):
         current_id_image = user_id.user_image
 
 
-        DB = Comment_posting(post             = pk_num,
+        DB = Comment_posting(post             = post_pk_num,
                              comment_id       = current_id,
                              comment_id_image = '/media/' + str(current_id_image),
                              comment          = comment_content,
@@ -252,7 +252,7 @@ def comment_delete(request):
     if request.method == "POST":
         comment_pk = request.POST['comment_pk']
 
-        DB = Comment_posting.objects.get(comment_pk_num = comment_pk)
+        DB = Comment_posting.objects.get(comment_pk_num = str(comment_pk))
         DB.delete()
 
         res2 = {

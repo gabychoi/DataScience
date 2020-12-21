@@ -130,7 +130,7 @@
                         <button type="submit" class="btn btn-azure pull-right">게시</button>
                         <ul class="nav nav-pills">
                             <li>
-                              <input class="upload-name" value="파일선택" disabled="disabled">
+                              <input class="upload-name" value="파일 선택" disabled="disabled">
 
                               <label for="input-file">업로드</label>
                               <input type="file" id="input-file" class="upload-hidden" name="image">
@@ -269,12 +269,11 @@
 
 
                     <div class="box-footer" style="display: block;">
-                      <input type="hidden" id="user_name" value="{{user_name}}">
-                      <input type="hidden" id="pk_num" value="{{post_list.pk_num}}" />
+                      <input type="hidden" id="user_name{{post_list.pk_num}}" value="{{user_name}}">
+                      <input type="hidden" id="pk_num{{post_list.pk_num}}" value="{{post_list.pk_num}}">
                       <img class="img-responsive img-circle img-sm" src="{{user_image}}" alt="Alt Text">
                       <div class="img-push">
-                        <input type="text" class="form-control input-sm" placeholder="댓글입력" name="comment" id="commentContent{{post_list.pk_num}}" maxlength="400" onkeypress="if(event.keyCode==13){pressEnter('{{post_list.pk_num}}')}" style="width=200px">
-                        <button type="submit" class="btn btn-azure pull-right" id="commentBtn{{post_list.pk_num}}">댓글달기</button>
+                        <input type="text" class="form-control input-sm" placeholder="Enter 키로 댓글을 입력하세요." name="comment" id="commentContent{{post_list.pk_num}}" maxlength="400" onkeypress="if(event.keyCode==13){pressEnter('{{post_list.pk_num}}')}" style="width=200px">
                       </div>
                     </div>
                   </div><!--  end posts-->
@@ -402,47 +401,32 @@
 
     <footer class="footer">
       <div class="container">
-        <p class="text-muted"> Copyright &copy; Company - All rights reserved </p>
+        <p class="text-muted"> Copyright &copy; 악!플원정대 - All rights reserved </p>
       </div>
     </footer>
 
 
   <script>
-    $(document).ready(function(){
-      var post_num_list  = {{ pk_num_list | safe }};
-      var writer         = "{{ user_name }}";
-      var pk_num         = $("#pk_num").val();
-      var button_id      = "#commentBtn" + pk_num;
-      var comment_pk_num = {{ comment_pk_num | safe }};
+    function pressEnter(post_num){
+        var post_pk_num = post_num
+        var comment_id  = $('#user_name' + post_pk_num).val();
+        var comment     = $('#commentContent' + post_pk_num).val();
+        var post_id     = '#commentBox' + post_pk_num
 
-      button_array = new Array;
-      enter_array = new Array;
 
-      for(var i=0; i<post_num_list.length; i++){
-        button_array.push('#commentBtn' + post_num_list[i]);
-        enter_array.push('#commentContent' + post_num_list[i])
-      }
-
-      $.each(button_array, function(idx, button_id){
-        $(button_id).on('click', function(){
-
-          var comment_id = "#commentContent" + post_num_list[idx];
-          var post_id    = "#commentBox" + post_num_list[idx];
-          var comment    = $(comment_id).val();
-          $(comment_id).val("");
-
-          $.ajax({
-          url      : "{% url 'comment_create' %}",
-          type     : "POST",
-          datatype : "json",
-          data     :{
-            'csrfmiddlewaretoken' : '{{ csrf_token }}',
-            'pk_num'              : pk_num,
-            'writer'              : writer,
-            'comment'             : comment
-          },
+        $.ajax({
+            url       : "{% url 'comment_create' %}",
+            type      : "POST",
+            dataType  : "json",
+            data      : {
+                'csrfmiddlewaretoken'   : '{{ csrf_token }}',
+                'post_pk_num'           : post_pk_num,
+                'writer'                : comment_id,
+                'comment'               : comment
+            },
             success : function(response){
               if(response.bad_comment_bool==0){
+                $('#commentContent' + post_pk_num).val("");
                 var txt = "";
                 var temp_var = "'comment_report'"
                 txt += '<div class="box-comment" id="comment' + response.last_comment_pk_num + '">';
@@ -465,7 +449,7 @@
                 txt += '<li><i class="fa-li fa fa-envelope"></i><div class="user-detail">이메일: <span>' + response.user_email + '</span> </div></li>'
                 txt += '<li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플게시수: <span style="color:red">' + response.penalty_count + '</span> </div></li>'
                 txt += '<li><i class="fa-li fa fa-comments"></i><div class="user-detail">댓글게시수: <span>' + response.comment_count + '</span> </div></li>'
-                txt += '<li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플비율: <span style="color:red">' + response.bad_comment_ratio + '</span> </div></li>'
+                txt += '<li><i class="fa-li fa fa-comments"></i><div class="user-detail">악플비율: <span style="color:#ff0000">' + response.bad_comment_ratio + '</span> </div></li>'
                 txt += '<li><i class="fa-li fa fa-comments"></i><div class="user-detail">자기소개: <span>' + response.about + '</span> </div></li>'
                 txt += '</ul>';
                 txt += '</div>';
@@ -477,7 +461,7 @@
                 txt += '<a href="javascript:report_url('+ response.last_comment_pk_num +')">';
                 txt += '<font size="0.05" font-size="xx-small" style="cursor:hand;cursor:pointer;">신고/이의제기</font>';
                 txt += '</a>';
-                txt += '<a href="commentDelete('+ response.last_comment_pk_num +')">';
+                txt += '<a onclick="commentDelete('+ response.last_comment_pk_num +')">';
                 txt += '<font size="0.05" font-size="xx-small" style="cursor:hand;cursor:pointer;"> 삭제</font>';
                 txt += '</a>';
                 txt += '</span>';
@@ -487,6 +471,7 @@
                 $(post_id).append(txt);
               }
               else{
+                $('#commentContent' + post_pk_num).val("");
                 var txt = "";
                 txt += '<div class="box-comment" id="comment' + response.last_comment_pk_num + '">';
                 txt += '<img class="img-circle img-sm" src="' + response.current_id_image + '" alt="User Image">';
@@ -532,16 +517,16 @@
             error : function(request, status, error){
               alert(error);
             }
-          })
         })
-      })
-    })
-  </script>
+    }
 
+  </script>
 
   <script>
     function commentDelete(comment_pk){
       var comment_pk = comment_pk;
+      console.log(comment_pk);
+
       var delete_warning = confirm('댓글을 삭제하시겠습니까?')
       if(delete_warning == true){
         $.ajax({
@@ -564,11 +549,6 @@
       }else{
         console.log('삭제안한데');
       }
-    }
-
-    function pressEnter(post_pk){
-      var button = '#commentBtn' + post_pk
-      $(button).click();
     }
 
     function make_popup(id){
