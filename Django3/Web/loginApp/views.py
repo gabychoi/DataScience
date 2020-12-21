@@ -37,7 +37,7 @@ def bad_comment_detector(comment):
     comment_label = tokenizer.texts_to_sequences(comment_list)
     comment_pad = pad_sequences(comment_label, padding='post', maxlen=400)
     prob = loaded_model.predict(comment_pad)[0][0]
-    if prob < 0.35:
+    if prob < 0.5:
         return 0, prob
     else:
         return 1, prob
